@@ -1,0 +1,44 @@
+---
+title: "STAA 566 HW2 Dynamic Graph"
+author: "Sherry Schulz"
+date: "2/17/2022"
+output: html_document
+knit: (function(input_file, encoding){out_dir<-'docs';rmarkdown::render(input_file,encoding=encoding,output_file=file.path(dirname(input_file),out_dir, 'index.html'))})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+```
+
+After quarantine and restrictions were implemented due to Covid Pandemic, many lost their jobs and businesses. I want to compare the USA and Colorado unemployment rates from 2001 to 2021. The data set is extracted from the Bureau of Labor Statistics.
+For CO Unemployment Rate: https://beta.bls.gov/dataViewer/view/timeseries/LASST080000000000003
+For USA Unemployment Rate:https://beta.bls.gov/dataViewer/view/timeseries/LNU04000000
+I will create a comparative dynamic graphs that describe the progression of unemployment rate from 2001-2021. One can see that there is a sharp increase when pandemic initially hit. It has recovered to the previous level since then. Also, Colorado seems to follow similar trend as the overall USA trend.
+
+```{r}
+Bothdata<- read.csv("Umemployment Rate Both 2001-2021.csv")
+Bothdata$DateR <- as.Date(paste(Bothdata$Date,"-01",sep=""))
+```
+
+```{r}
+#install.packages("plotly")
+library(plotly)
+```
+
+```{r}
+plot<-plot_ly(Bothdata,
+              x=~DateR,
+              y=~Value,
+              color= ~ID,
+              colors = c("blue", "orange"),
+              type="scatter",
+              mode="lines"
+              )
+plot<-plot %>% rangeslider() %>%
+  layout(title="Unemployment Rate in USA and CO from 2001-2021", xaxis=list(title="Date"), yaxis=list(title="Unemployment Rate in %"))
+plot<-plot%>% layout(hovermod = "x")
+plot
+```
+
+
+
